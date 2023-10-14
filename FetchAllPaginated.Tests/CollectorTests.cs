@@ -4,30 +4,62 @@ namespace FetchAllPaginated.Tests
     public class CollectorTests
     {
         [TestMethod]
-        public void FetchAllApiDataParallel_ShouldReturnExactItemCount()
+        public void FetchAllApiDataParallel_ShouldReturnExactItemCountWhenHasMore()
         {
             // Arrange
             var collector = new Collector();
 
             // Act
-            Dictionary<int, string> result = collector.FetchAllApiDataParallel();
+            int expectedTotalCount = ApiDataProvider.GetTotalCount();
+            int requestedCount = expectedTotalCount - 2;
+            Dictionary<int, string> result = collector.FetchAllApiDataParallel(requestedCount);
 
             // Assert
+            Assert.AreEqual((requestedCount < 0) ? 0 : requestedCount, result.Count);
+        }
+
+        [TestMethod]
+        public void FetchAllApiDataParallel_ShouldReturnExactItemCountWhenHasLess()
+        {
+            // Arrange
+            var collector = new Collector();
+
+            // Act
             int expectedTotalCount = ApiDataProvider.GetTotalCount();
+            int requestedCount = expectedTotalCount + 2;
+            Dictionary<int, string> result = collector.FetchAllApiDataParallel(requestedCount);
+
+            // Assert
             Assert.AreEqual(expectedTotalCount, result.Count);
         }
 
         [TestMethod]
-        public void FetchAllApiDataSequential_ShouldReturnExactItemCount()
+        public void FetchAllApiDataSequential_ShouldReturnExactItemCountWhenHasMore()
         {
             // Arrange
             var collector = new Collector();
 
             // Act
-            Dictionary<int, string> result = collector.FetchAllApiDataSequential();
+            int expectedTotalCount = ApiDataProvider.GetTotalCount();
+            int requestedCount = expectedTotalCount - 2;
+            Dictionary<int, string> result = collector.FetchAllApiDataSequential(requestedCount);
 
             // Assert
+            Assert.AreEqual((requestedCount < 0) ? 0 : requestedCount, result.Count);
+        }
+
+        [TestMethod]
+        public void FetchAllApiDataSequential_ShouldReturnExactItemCountWhenHasLess()
+        {
+            // Arrange
+            var collector = new Collector();
+
+            // Act
             int expectedTotalCount = ApiDataProvider.GetTotalCount();
+            int requestedCount = expectedTotalCount + 2;
+            Dictionary<int, string> result = collector.FetchAllApiDataSequential(requestedCount);
+
+            // Assert
             Assert.AreEqual(expectedTotalCount, result.Count);
         }
     }
